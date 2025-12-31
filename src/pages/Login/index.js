@@ -1,10 +1,30 @@
 import './index.scss'
-import { Card, Form, Input, Button } from 'antd'
+import { Card, Form, Input, Button, message } from 'antd'
 import logo from '@/assets/logo.png'
 
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { submitLogin } from '@/store/modules/userStore'
+
 const Login = () => {
-  const onFinish = (values) => {
-    console.log(values)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const onFinish = async (userData) => {
+    // console.log(userData)
+    // 提交表單數據到服務器
+    try {
+      await dispatch(submitLogin(userData));
+      // 顯示成功消息
+      message.success('登录成功');
+      // 跳轉到首頁
+      navigate('/');
+
+    } catch (error) {
+      // 這裡會捕捉到 submitLogin 中 throw 的錯誤
+      console.error('登录失败:', error);
+      // 顯示失敗消息
+      message.error(error.response?.data?.message || '登录失败');
+    }
   }
   return (
     <div className="login">
@@ -14,11 +34,11 @@ const Login = () => {
         <Form validateTrigger='onBlur' onFinish={onFinish}>
           {/* 設置驗證規則 rules */}
           <Form.Item
-            name='phone'
+            name='mobile'
             rules={
               [
                 { required: true, message: '請輸入手機號碼' },
-                { pattern: /^09\d{8}$/, message: '請輸入手機號碼格式正確' }
+                { pattern: /^1[3-9]\d{9}$/, message: '請輸入手機號碼格式正確' }
               ]
             }
           >
