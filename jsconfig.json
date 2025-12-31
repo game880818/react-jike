@@ -1,4 +1,3 @@
-// 配置@指向src目录
 {
   "compilerOptions": {
     "baseUrl": "./",
