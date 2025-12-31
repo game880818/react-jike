@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { request } from '@/utils'
-import { setToken, getToken, clearToken } from '@/apis/token'
+import { setToken, getToken, clearToken } from '@/utils'
 
 // 用戶模塊
 const userSlice = createSlice({
