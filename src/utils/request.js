@@ -1,5 +1,6 @@
 // 封裝axios
 import axios from 'axios'
+import { getToken } from './token'
 
 // 1.根域名配置
 // 2.超時時間
@@ -12,6 +13,13 @@ const request = axios.create({
 
 // 添加请求拦截器
 request.interceptors.request.use((config) => {
+  // 1. 从 localStorage 中获取 token
+  const token = getToken()
+  // 2. 如果 token 存在，則添加到請求頭中
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+
   return config
 }, (error) => {
   return Promise.reject(error)
