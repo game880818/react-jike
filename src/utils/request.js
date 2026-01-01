@@ -38,11 +38,11 @@ request.interceptors.response.use((response) => {
   if (error.response.status === 401) {
     // 1. 清除 token
     clearToken()
-    // 2.1 跳转到登录页 3 刷新頁面
+    // 方法1 : 跳转到登录页 3 強制刷新頁面
     // router.navigate('/login')
     // window.location.reload()
 
-    // 2.2用 href 跳轉，它自帶 reload 效果，能徹底清除內存中的錯誤狀態
+    // 方法2 : 用 href 跳轉，它自帶 reload 效果，能徹底清除內存中的錯誤狀態
     window.location.href = '/login'
   }
   return Promise.reject(error)
