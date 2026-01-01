@@ -5,7 +5,7 @@ import {
   EditOutlined,
   LogoutOutlined,
 } from '@ant-design/icons'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import './index.scss'
 
 const { Header, Sider } = Layout
@@ -13,22 +13,30 @@ const { Header, Sider } = Layout
 const items = [
   {
     label: '首页',
-    key: '1',
+    key: '/',
     icon: <HomeOutlined />,
   },
   {
     label: '文章管理',
-    key: '2',
+    key: '/article',
     icon: <DiffOutlined />,
   },
   {
     label: '创建文章',
-    key: '3',
+    key: '/publish',
     icon: <EditOutlined />,
   },
 ]
 
 const GeekLayout = () => {
+  const navigate = useNavigate()
+  // 点击菜单切换路由
+  const changeRoute = (route) => {
+    // 1. 从 route 中获取 key
+    const key = route.key
+    // 2. 切换路由
+    navigate(key)
+  }
   return (
     <Layout>
       <Header className="header">
@@ -49,7 +57,9 @@ const GeekLayout = () => {
             theme="dark"
             defaultSelectedKeys={['1']}
             items={items}
-            style={{ height: '100%', borderRight: 0 }}></Menu>
+            style={{ height: '100%', borderRight: 0 }}
+            onClick={changeRoute}
+          ></Menu>
         </Sider>
         <Layout className="layout-content" style={{ padding: 20 }}>
           <Outlet />
