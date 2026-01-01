@@ -9,7 +9,7 @@ import Article from '@/pages/Article';
 import Publish from '@/pages/Publish';
 
 // 配置路由
-const store = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: '/',
     element: <AuthRoute><Layout /></AuthRoute>,
@@ -34,4 +34,4 @@ const store = createBrowserRouter([
   }
 ])
 
-export default store;
+export default router;

@@ -7,6 +7,7 @@ const userSlice = createSlice({
   name: 'user',
   initialState: {
     token: getToken() || '', // 用戶 token
+    userInfo: {},
   },
   // 同步方法
   reducers: {
@@ -14,11 +15,19 @@ const userSlice = createSlice({
     setUserToken(state, action) {
       state.token = action.payload
       setToken(action.payload)
+    },
+    setUserInfo(state, action) {
+      state.userInfo = action.payload
+    },
+    clearUser(state) {
+      state.token = ''
+      state.userInfo = {}
+      clearToken()
     }
   }
 })
 
-const { setUserToken } = userSlice.actions
+const { setUserToken, setUserInfo, clearUser } = userSlice.actions
 // 撰寫異步方法
 const submitLogin = (userData) => {
   return async (dispatch) => {
@@ -33,6 +42,14 @@ const submitLogin = (userData) => {
   }
 }
 
+const fetchUserInfo = () => {
+  return async (dispatch) => {
+    const res = await request.get('/user/profile');
+    // 將用戶信息存到 state 中
+    dispatch(setUserInfo(res.data));
+  }
+}
 
-export { submitLogin, setUserToken }
+
+export { submitLogin, fetchUserInfo, clearUser }
 export default userSlice.reducer

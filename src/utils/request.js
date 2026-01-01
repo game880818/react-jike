@@ -1,6 +1,6 @@
 // 封裝axios
 import axios from 'axios'
-import { getToken } from './token'
+import { getToken, clearToken } from './token'
 
 // 1.根域名配置
 // 2.超時時間
@@ -34,6 +34,17 @@ request.interceptors.response.use((response) => {
   // 超出 2xx 范围的状态码都会触发该函数。
   // 对响应错误做点什么
   // 寫入 500 和網路錯誤的處理
+  // 添加401錯誤攔截
+  if (error.response.status === 401) {
+    // 1. 清除 token
+    clearToken()
+    // 2.1 跳转到登录页 3 刷新頁面
+    // router.navigate('/login')
+    // window.location.reload()
+
+    // 2.2用 href 跳轉，它自帶 reload 效果，能徹底清除內存中的錯誤狀態
+    window.location.href = '/login'
+  }
   return Promise.reject(error)
 })
 
