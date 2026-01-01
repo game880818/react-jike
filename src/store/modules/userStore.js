@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { request } from '@/utils'
 import { setToken, getToken, clearToken } from '@/utils'
+import { loginAPI, getProfileAPI } from '@/apis/user'
 
 // 用戶模塊
 const userSlice = createSlice({
@@ -32,7 +33,7 @@ const { setUserToken, setUserInfo, clearUser } = userSlice.actions
 const submitLogin = (userData) => {
   return async (dispatch) => {
     try {
-      const res = await request.post('/authorizations', userData);
+      const res = await loginAPI(userData)
       // 將 token 存到 state 中
       dispatch(setUserToken(res.data.token));
     } catch (error) {
@@ -44,7 +45,7 @@ const submitLogin = (userData) => {
 
 const fetchUserInfo = () => {
   return async (dispatch) => {
-    const res = await request.get('/user/profile');
+    const res = await getProfileAPI()
     // 將用戶信息存到 state 中
     dispatch(setUserInfo(res.data));
   }
