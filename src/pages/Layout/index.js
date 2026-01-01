@@ -5,7 +5,7 @@ import {
   EditOutlined,
   LogoutOutlined,
 } from '@ant-design/icons'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import './index.scss'
 
 const { Header, Sider } = Layout
@@ -32,11 +32,11 @@ const GeekLayout = () => {
   const navigate = useNavigate()
   // 点击菜单切换路由
   const changeRoute = (route) => {
-    // 1. 从 route 中获取 key
-    const key = route.key
-    // 2. 切换路由
-    navigate(key)
+    // 切换路由
+    navigate(route.key)
   }
+  const selectedkey = useLocation().pathname //獲取當前網址的後綴 例如：/ 、/article 、/publish
+
   return (
     <Layout>
       <Header className="header">
@@ -55,7 +55,8 @@ const GeekLayout = () => {
           <Menu
             mode="inline"
             theme="dark"
-            defaultSelectedKeys={['1']}
+            // 根據當前網址選擇菜單
+            selectedKeys={[selectedkey]}
             items={items}
             style={{ height: '100%', borderRight: 0 }}
             onClick={changeRoute}
