@@ -5,6 +5,8 @@ import { Table, Tag, Space } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import img404 from '@/assets/error.png'
 
+import { useGetChannels } from '@/hooks/useGetChannels'
+
 const { Option } = Select
 const { RangePicker } = DatePicker
 
@@ -77,6 +79,9 @@ const Article = () => {
       title: 'wkwebview离线化加载h5资源解决方案'
     }
   ]
+  // 獲取文章頻道列表
+  const channels = useGetChannels()
+
   return (
     <div>
       {/* 文章列表篩選 */}
@@ -100,12 +105,13 @@ const Article = () => {
 
           <Form.Item label="频道" name="channel_id">
             <Select
-              placeholder="请选择文章频道"
-              defaultValue="lucy"
+              placeholder="請選擇文章频道"
+              // defaultValue="lucy"
               style={{ width: 120 }}
             >
-              <Option value="jack">Jack</Option>
-              <Option value="lucy">Lucy</Option>
+              {channels.map(item => (
+                <Option key={item.id} value={item.id}>{item.name}</Option>
+              ))}
             </Select>
           </Form.Item>
 

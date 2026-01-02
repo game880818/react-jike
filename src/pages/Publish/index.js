@@ -13,29 +13,22 @@ import { message } from 'antd'
 import Editor from './Editor'
 import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
-import { useState, useEffect, useRef } from 'react'
-import { getChannelsAPI, createArticleAPI } from '@/apis/article'
+import { useState, useRef } from 'react'
+import { useGetChannels } from '@/hooks/useGetChannels'
+import { createArticleAPI } from '@/apis/article'
 import './index.scss'
 
 const { Option } = Select
 
 const Publish = () => {
-  // 文章頻道列表
-  const [channels, setChannels] = useState([])
+  // 獲取文章頻道列表
+  const channels = useGetChannels()
   // 封面類型
   const [imageType, setImageType] = useState(1)
   // 儲存上傳的圖片數組
   const [imageList, setImageList] = useState([])
   // 用於緩存上傳的圖片數組 (用useRef可以在重新渲染時保存數據=倉庫)
   const cacheImageList = useRef([])
-  useEffect(() => {
-    const getChannels = async () => {
-      const res = await getChannelsAPI()
-      setChannels(res.data.channels)
-    }
-    getChannels()
-  }, [])
-
 
   const submitForm = async (formValue) => {
     // 校驗封面類型和上傳的圖片數量是否匹配
