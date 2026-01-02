@@ -13,7 +13,7 @@ import Editor from './Editor'
 import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { getChannelsAPI } from '@/apis/article'
+import { getChannelsAPI, createArticleAPI } from '@/apis/article'
 import './index.scss'
 
 const { Option } = Select
@@ -27,6 +27,20 @@ const Publish = () => {
     }
     getChannels()
   }, [])
+  const submitForm = async (formValue) => {
+    console.log(formValue)
+    const { title, content, channel_id } = formValue
+    const formatData = {
+      title,
+      content,
+      cover: {
+        type: 0,
+        images: []
+      },
+      channel_id,
+    }
+    await createArticleAPI(formatData)
+  }
   return (
     <div className="publish">
       <Card
@@ -42,6 +56,7 @@ const Publish = () => {
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
           initialValues={{ type: 1 }}
+          onFinish={submitForm}
         >
           <Form.Item
             label="标题"

@@ -2,13 +2,13 @@ import React, { useEffect, useRef } from 'react';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css'; // 導入官方內建的精美主題
 
-const MyEditor = () => {
+const MyEditor = ({ value, onChange }) => {
   const editorRef = useRef(null); // 指向 DOM 元素
   const quillRef = useRef(null);  // 儲存 Quill 實例
 
   useEffect(() => {
     if (editorRef.current && !quillRef.current) {
-      // 初始化 Quill
+      // 1.初始化 Quill
       quillRef.current = new Quill(editorRef.current, {
         theme: 'snow', // 使用有工具欄的 snow 主題
         placeholder: '請輸入內容...',
@@ -21,12 +21,21 @@ const MyEditor = () => {
             ['clean'] // 清除格式按鈕
           ]
         }
-      });
+      })
 
-      // 當內容改變時的監聽器
+      // 2. 只有在掛載時，把初始的 value 塞進去一次
+      if (value) {
+        quillRef.current.root.innerHTML = value;
+      }
+
+      // 3. 監聽輸入，將結果推出去給 Form
+      // 重點：內容變動時，呼叫 antd 傳進來的 onChange
       quillRef.current.on('text-change', () => {
-        console.log('當前 HTML:', quillRef.current.root.innerHTML);
-      });
+        const html = quillRef.current.root.innerHTML;
+        // 如果內容是空字串或只有空標籤，傳回空值以便觸發 rules 驗證
+        const cleanHtml = html === '<p><br></p>' ? '' : html;
+        onChange?.(cleanHtml)
+      })
     }
   }, []);
 
