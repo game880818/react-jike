@@ -12,11 +12,21 @@ import {
 import Editor from './Editor'
 import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { getChannelsAPI } from '@/apis/article'
 import './index.scss'
 
 const { Option } = Select
 
 const Publish = () => {
+  const [channels, setChannels] = useState([])
+  useEffect(() => {
+    const getChannels = async () => {
+      const res = await getChannelsAPI()
+      setChannels(res.data.channels)
+    }
+    getChannels()
+  }, [])
   return (
     <div className="publish">
       <Card
@@ -46,7 +56,7 @@ const Publish = () => {
             rules={[{ required: true, message: '请选择文章频道' }]}
           >
             <Select placeholder="请选择文章频道" style={{ width: 400 }}>
-              <Option value={0}>推荐</Option>
+              {channels.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
             </Select>
           </Form.Item>
           <Form.Item
