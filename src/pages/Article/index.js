@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select } from 'antd'
 import locale from 'antd/es/date-picker/locale/zh_CN'
@@ -6,6 +7,8 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import img404 from '@/assets/error.png'
 
 import { useGetChannels } from '@/hooks/useGetChannels'
+import { getArticleListAPI } from '@/apis/article'
+import { useEffect } from 'react'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
@@ -81,7 +84,18 @@ const Article = () => {
   ]
   // 獲取文章頻道列表
   const channels = useGetChannels()
-
+  // 文章列表
+  const [articleList, setArticleList] = useState([])
+  const [articleCount, setArticleCount] = useState(0)
+  useEffect(() => {
+    async function getList() {
+      const res = await getArticleListAPI()
+      console.log(res.data.results)
+      setArticleList(res.data.results)
+      setArticleCount(res.data.total_count)
+    }
+    getList()
+  }, [])
   return (
     <div>
       {/* 文章列表篩選 */}
@@ -128,8 +142,8 @@ const Article = () => {
         </Form>
       </Card>
       {/* 文章列表 */}
-      <Card title={`根据筛选条件共查询到 count 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={data} />
+      <Card title={`根据筛选条件共查询到 ${articleCount} 条结果：`}>
+        <Table rowKey="id" columns={columns} dataSource={articleList} />
       </Card>
     </div>
   )

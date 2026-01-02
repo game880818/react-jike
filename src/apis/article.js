@@ -16,3 +16,11 @@ export const createArticleAPI = (formData) => {
     data: formData
   })
 }
+
+export const getArticleListAPI = (params) => {
+  return request({
+    url: '/mp/articles',
+    method: 'GET',
+    params
+  })
+}

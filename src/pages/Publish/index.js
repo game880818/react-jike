@@ -32,7 +32,7 @@ const Publish = () => {
 
   const submitForm = async (formValue) => {
     // 校驗封面類型和上傳的圖片數量是否匹配
-    if (imageList.length != imageType) {
+    if (imageList.length !== imageType) {
       message.error(`請上傳${imageType}張圖片`)
       return
     }
