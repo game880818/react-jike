@@ -14,6 +14,11 @@ const { Option } = Select
 const { RangePicker } = DatePicker
 
 const Article = () => {
+  // 方法2:枚舉渲染
+  const statusTag = {
+    1: <Tag color='warning'>待審核</Tag>,
+    2: <Tag color='success'>審核通過</Tag>
+  }
   // 准备列数据
   const columns = [
     {
@@ -32,7 +37,9 @@ const Article = () => {
     {
       title: '状态',
       dataIndex: 'status',
-      render: data => <Tag color="green">审核通过</Tag>
+      // 渲染状态标签 1 > 待審核 ;2 > 審核通過 
+      // 方法1:3元條件渲染 
+      render: data => statusTag[data]
     },
     {
       title: '发布时间',
@@ -68,20 +75,20 @@ const Article = () => {
     }
   ]
   // 准备表格body数据
-  const data = [
-    {
-      id: '8218',
-      comment_count: 0,
-      cover: {
-        images: [],
-      },
-      like_count: 0,
-      pubdate: '2019-03-11 09:00:00',
-      read_count: 2,
-      status: 2,
-      title: 'wkwebview离线化加载h5资源解决方案'
-    }
-  ]
+  // const data = [
+  //   {
+  //     id: '8218',
+  //     comment_count: 0,
+  //     cover: {
+  //       images: [],
+  //     },
+  //     like_count: 0,
+  //     pubdate: '2019-03-11 09:00:00',
+  //     read_count: 2,
+  //     status: 2,
+  //     title: 'wkwebview离线化加载h5资源解决方案'
+  //   }
+  // ]
   // 獲取文章頻道列表
   const channels = useGetChannels()
   // 文章列表
