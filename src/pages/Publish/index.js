@@ -9,10 +9,11 @@ import {
   Space,
   Select
 } from 'antd'
+import { message } from 'antd'
 import Editor from './Editor'
 import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { getChannelsAPI, createArticleAPI } from '@/apis/article'
 import './index.scss'
 
@@ -23,7 +24,10 @@ const Publish = () => {
   const [channels, setChannels] = useState([])
   // 封面類型
   const [imageType, setImageType] = useState(1)
+  // 儲存上傳的圖片數組
   const [imageList, setImageList] = useState([])
+  // 用於緩存上傳的圖片數組 (用useRef可以在重新渲染時保存數據=倉庫)
+  const cacheImageList = useRef([])
   useEffect(() => {
     const getChannels = async () => {
       const res = await getChannelsAPI()
@@ -34,14 +38,19 @@ const Publish = () => {
 
 
   const submitForm = async (formValue) => {
+    // 校驗封面類型和上傳的圖片數量是否匹配
+    if (imageList.length != imageType) {
+      message.error(`請上傳${imageType}張圖片`)
+      return
+    }
     console.log(formValue)
     const { title, content, channel_id } = formValue
     const formatData = {
       title,
       content,
       cover: {
-        type: 0,
-        images: []
+        type: imageType,
+        images: imageList.map(item => item.response.data.url)
       },
       channel_id,
     }
@@ -49,13 +58,27 @@ const Publish = () => {
   }
   // 圖片上傳成功回調
   const onUploadChange = (info) => {
-    console.log(info)
     setImageList(info.fileList)
+    cacheImageList.current = info.fileList
   }
   // 封面類型改變回調
   const onTypeChange = (e) => {
-    console.log(e.target.value);
-    setImageType(e.target.value)
+    // console.log(e.target.value);
+    const type = e.target.value
+    setImageType(type)
+    // 假設從多圖>單圖, 只保留第一張圖片
+    if (type === 1) {
+      // 1圖模式
+      const imgList = cacheImageList.current[0] ? [cacheImageList.current[0]] : []
+      setImageList(imgList)
+    } else if (type === 3) {
+      // 3圖模式
+      // const imgList = cacheImageList.current
+      setImageList(cacheImageList.current)
+    } else {
+      // 無圖模式
+      setImageList([])
+    }
   }
 
   return (
@@ -109,6 +132,7 @@ const Publish = () => {
             name 上傳表單名稱
             onChange 上傳成功回調
             maxCount 限制上傳圖片數量
+            fileList 上傳列表
             */}
             {imageType > 0 && (
               <Upload
@@ -118,6 +142,7 @@ const Publish = () => {
                 name='image'
                 onChange={onUploadChange}
                 maxCount={imageType}
+                fileList={imageList}
               >
                 <div style={{ marginTop: 8 }}>
                   <PlusOutlined />
