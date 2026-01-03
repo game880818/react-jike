@@ -48,6 +48,7 @@ const Publish = () => {
       channel_id,
     }
     await createArticleAPI(formatData)
+    message.success('發布成功')
   }
   // 圖片上傳成功回調
   const onUploadChange = (info) => {
