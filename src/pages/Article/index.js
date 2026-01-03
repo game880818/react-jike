@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Popconfirm } from 'antd'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 import { Table, Tag, Space } from 'antd'
@@ -8,12 +8,12 @@ import img404 from '@/assets/error.png'
 
 import { useGetChannels } from '@/hooks/useGetChannels'
 import { getArticleListAPI, delArticleAPI } from '@/apis/article'
-import { useEffect } from 'react'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
 
 const Article = () => {
+  const navigate = useNavigate()
   // 方法2:枚舉渲染
   const statusTag = {
     1: <Tag color='warning'>待審核</Tag>,
@@ -63,7 +63,7 @@ const Article = () => {
       render: data => {
         return (
           <Space size="middle">
-            <Button type="primary" shape="circle" icon={<EditOutlined />} />
+            <Button type="primary" shape="circle" icon={<EditOutlined />} onClick={() => navigate(`/article?id=${data.id}`)} />
             <Popconfirm
               title="确认删除该条文章吗?"
               onConfirm={() => delArticle(data)}
