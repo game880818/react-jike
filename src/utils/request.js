@@ -35,7 +35,7 @@ request.interceptors.response.use((response) => {
   // 对响应错误做点什么
   // 寫入 500 和網路錯誤的處理
   // 添加401錯誤攔截
-  if (error.response.status === 401) {
+  if (error?.response?.status === 401) {
     // 1. 清除 token
     clearToken()
     // 方法1 : 跳转到登录页 3 強制刷新頁面

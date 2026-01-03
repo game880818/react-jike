@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select } from 'antd'
+import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Popconfirm } from 'antd'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 import { Table, Tag, Space } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import img404 from '@/assets/error.png'
 
 import { useGetChannels } from '@/hooks/useGetChannels'
-import { getArticleListAPI } from '@/apis/article'
+import { getArticleListAPI, delArticleAPI } from '@/apis/article'
 import { useEffect } from 'react'
 
 const { Option } = Select
@@ -59,16 +59,24 @@ const Article = () => {
     },
     {
       title: '操作',
+      // 如果沒有dataIndex,則會傳入所有data
       render: data => {
         return (
           <Space size="middle">
             <Button type="primary" shape="circle" icon={<EditOutlined />} />
-            <Button
-              type="primary"
-              danger
-              shape="circle"
-              icon={<DeleteOutlined />}
-            />
+            <Popconfirm
+              title="确认删除该条文章吗?"
+              onConfirm={() => delArticle(data)}
+              okText="确认"
+              cancelText="取消"
+            >
+              <Button
+                type="primary"
+                danger
+                shape="circle"
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
           </Space>
         )
       }
@@ -125,12 +133,34 @@ const Article = () => {
       end_pubdate: formData.date?.[1]?.format('YYYY-MM-DD') || '',
     })
   }
-
+  // 切換頁面
   const onChangePage = (page) => {
     setReqData({
       ...reqData,
       page,
     })
+  }
+  // 刪除文章
+  const delArticle = async (data) => {
+    console.log(data);
+    await delArticleAPI(data.id)
+    // 刪除成功後，刷新列表
+    // 如果刪除的是那一頁的最後一條文章，且不是第一頁，則頁數減一
+    // 方法1: 計算是否為最後一頁的最後一條文章
+    // const isPageLastItem = (articleCount - 1) % reqData.per_page === 0
+    // 方法2: 直接判斷是否為最後一條文章，更不容易出錯
+    const isPageLastItem = articleList.length === 1
+    console.log(isPageLastItem);
+    if (isPageLastItem && reqData.page > 1) {
+      setReqData({
+        ...reqData,
+        page: reqData.page - 1,
+      })
+    } else {
+      setReqData({
+        ...reqData,
+      })
+    }
   }
 
   return (
