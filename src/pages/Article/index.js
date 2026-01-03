@@ -91,18 +91,41 @@ const Article = () => {
   // ]
   // 獲取文章頻道列表
   const channels = useGetChannels()
-  // 文章列表
+  // 文章列表&總數
   const [articleList, setArticleList] = useState([])
   const [articleCount, setArticleCount] = useState(0)
+  // 篩選表單數據
+  const [reqData, setReqData] = useState({
+    status: '',
+    channel_id: '',
+    begin_pubdate: '',
+    end_pubdate: '',
+    page: 1,
+    per_page: 4,
+  })
+
   useEffect(() => {
     async function getList() {
-      const res = await getArticleListAPI()
-      console.log(res.data.results)
+      const res = await getArticleListAPI(reqData)
+      // console.log(res.data.results)
       setArticleList(res.data.results)
       setArticleCount(res.data.total_count)
     }
     getList()
-  }, [])
+  }, [reqData])
+
+  // 提交篩選表單
+  const onFinish = (formData) => {
+    // 如果沒有選擇，則給空字串
+    setReqData({
+      ...reqData,
+      status: formData.status,
+      channel_id: formData.channel_id || '',
+      begin_pubdate: formData.date?.[0]?.format('YYYY-MM-DD') || '',
+      end_pubdate: formData.date?.[1]?.format('YYYY-MM-DD') || '',
+    })
+  }
+
   return (
     <div>
       {/* 文章列表篩選 */}
@@ -115,12 +138,12 @@ const Article = () => {
         }
         style={{ marginBottom: 20 }}
       >
-        <Form initialValues={{ status: '' }}>
+        <Form initialValues={{ status: '' }} onFinish={onFinish}>
           <Form.Item label="状态" name="status">
             <Radio.Group>
               <Radio value={''}>全部</Radio>
-              <Radio value={0}>草稿</Radio>
-              <Radio value={2}>审核通过</Radio>
+              <Radio value={1}>待審核</Radio>
+              <Radio value={2}>審核通過</Radio>
             </Radio.Group>
           </Form.Item>
 
