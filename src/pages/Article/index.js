@@ -63,7 +63,7 @@ const Article = () => {
       render: data => {
         return (
           <Space size="middle">
-            <Button type="primary" shape="circle" icon={<EditOutlined />} onClick={() => navigate(`/article?id=${data.id}`)} />
+            <Button type="primary" shape="circle" icon={<EditOutlined />} onClick={() => navigate(`/publish?id=${data.id}`)} />
             <Popconfirm
               title="确认删除该条文章吗?"
               onConfirm={() => delArticle(data)}

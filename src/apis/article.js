@@ -31,3 +31,9 @@ export const delArticleAPI = (id) => {
     method: 'DELETE',
   })
 }
+
+export const getArticleDetailAPI = (id) => {
+  return request({
+    url: `/mp/articles/${id}`,
+  })
+}

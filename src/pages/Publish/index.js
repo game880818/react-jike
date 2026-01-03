@@ -12,10 +12,10 @@ import {
 import { message } from 'antd'
 import Editor from './Editor'
 import { PlusOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
-import { useState, useRef } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
+import { useState, useRef, useEffect } from 'react'
 import { useGetChannels } from '@/hooks/useGetChannels'
-import { createArticleAPI } from '@/apis/article'
+import { createArticleAPI, getArticleDetailAPI } from '@/apis/article'
 import './index.scss'
 
 const { Option } = Select
@@ -30,6 +30,7 @@ const Publish = () => {
   // 用於緩存上傳的圖片數組 (用useRef可以在重新渲染時保存數據=倉庫)
   const cacheImageList = useRef([])
 
+  // 創建文章
   const submitForm = async (formValue) => {
     // 校驗封面類型和上傳的圖片數量是否匹配
     if (imageList.length !== imageType) {
@@ -75,6 +76,22 @@ const Publish = () => {
     }
   }
 
+  // 透過id回顯數據
+  const [searchParams] = useSearchParams()
+  const articleID = searchParams.get('id')
+  const [form] = Form.useForm()
+  useEffect(() => {
+    async function getArticle() {
+      const res = await getArticleDetailAPI(articleID)
+      console.log(res.data)
+      // 將回顯的數據設置到表單中
+      form.setFieldsValue(res.data)
+    }
+    if (articleID) {
+      getArticle()
+    }
+  }, [articleID, form])
+
   return (
     <div className="publish">
       <Card
@@ -91,6 +108,7 @@ const Publish = () => {
           wrapperCol={{ span: 16 }}
           initialValues={{ type: 1 }}
           onFinish={submitForm}
+          form={form}
         >
           {/* 輸入文章標題 */}
           <Form.Item
