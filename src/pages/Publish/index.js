@@ -83,9 +83,18 @@ const Publish = () => {
   useEffect(() => {
     async function getArticle() {
       const res = await getArticleDetailAPI(articleID)
+      const data = res.data
+      const type = data.cover.type
       console.log(res.data)
       // 將回顯的數據設置到表單中
-      form.setFieldsValue(res.data)
+      form.setFieldsValue({
+        ...data,
+        type: type
+      })
+      // 設置封面類型
+      setImageType(type)
+      // 設置上傳的圖片數組 資料格式要求：對象數組
+      setImageList(data.cover.images.map((url) => ({ url })))
     }
     if (articleID) {
       getArticle()

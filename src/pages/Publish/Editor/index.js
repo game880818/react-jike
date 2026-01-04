@@ -23,11 +23,6 @@ const MyEditor = ({ value, onChange }) => {
         }
       })
 
-      // 2. 只有在掛載時，把初始的 value 塞進去一次
-      if (value) {
-        quillRef.current.root.innerHTML = value;
-      }
-
       // 3. 監聽輸入，將結果推出去給 Form
       // 重點：內容變動時，呼叫 antd 傳進來的 onChange
       quillRef.current.on('text-change', () => {
@@ -37,7 +32,12 @@ const MyEditor = ({ value, onChange }) => {
         onChange?.(cleanHtml)
       })
     }
-  }, []);
+    // 4. 只有在 value 有變化時，才更新 Quill 內容
+    // 例如回顯數據時，避免無限循環更新
+    if (value && quillRef.current.root.innerHTML !== value) {
+      quillRef.current.root.innerHTML = value;
+    }
+  }, [value]);
 
   return (
     <div style={{ padding: '20px' }}>
