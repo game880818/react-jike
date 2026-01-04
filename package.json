@@ -1,4 +1,5 @@
 {
+  "homepage": "https://game880818.github.io/react-jike",
   "name": "react-jike",
   "version": "0.1.0",
   "private": true,
@@ -26,7 +27,9 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "analyze": "source-map-explorer build/static/js/*.js"
+    "analyze": "source-map-explorer build/static/js/*.js",
+    "deploy": "gh-pages -d build",
+    "predeploy": "npm run build"
   },
   "eslintConfig": {
     "extends": [
@@ -48,6 +51,7 @@
   },
   "devDependencies": {
     "@craco/craco": "^7.1.0",
+    "gh-pages": "^6.3.0",
     "sass": "^1.97.1",
     "webpack-bundle-analyzer": "^5.1.0"
   }

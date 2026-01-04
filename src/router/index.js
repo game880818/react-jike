@@ -49,6 +49,8 @@ const router = createBrowserRouter([
     path: '/login',
     element: <Login />,
   }
-])
+], {
+  basename: "/react-jike" // 這裡一定要填寫你的 Repository 名稱
+})
 
 export default router;
