@@ -15,7 +15,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useState, useRef, useEffect } from 'react'
 import { useGetChannels } from '@/hooks/useGetChannels'
-import { createArticleAPI, getArticleDetailAPI } from '@/apis/article'
+import { createArticleAPI, updateArticleAPI, getArticleDetailAPI } from '@/apis/article'
 import './index.scss'
 
 const { Option } = Select
@@ -29,6 +29,34 @@ const Publish = () => {
   const [imageList, setImageList] = useState([])
   // 用於緩存上傳的圖片數組 (用useRef可以在重新渲染時保存數據=倉庫)
   const cacheImageList = useRef([])
+
+  // 透過id回顯數據
+  const [searchParams] = useSearchParams()
+  const articleID = searchParams.get('id')
+  const [form] = Form.useForm()
+  useEffect(() => {
+    async function getArticle() {
+      const res = await getArticleDetailAPI(articleID)
+      const data = res.data
+      const type = data.cover.type
+      console.log(res.data)
+      // 將回顯的數據設置到表單中
+      form.setFieldsValue({
+        ...data,
+        type: type
+      })
+      // 設置封面類型
+      setImageType(type)
+      // 設置上傳的圖片數組 資料格式要求：對象數組
+      // 並恢復緩存數據
+      const imgList = data.cover.images.map((url) => ({ url }))
+      setImageList(imgList)
+      cacheImageList.current = imgList
+    }
+    if (articleID) {
+      getArticle()
+    }
+  }, [articleID, form])
 
   // 創建文章
   const submitForm = async (formValue) => {
@@ -44,12 +72,26 @@ const Publish = () => {
       content,
       cover: {
         type: imageType,
-        images: imageList.map(item => item.response.data.url)
+        images: imageList.map(item => {
+          // 判斷是否有response屬性, 有則表示是上傳的圖片, 否則是回顯的圖片
+          if (item.response) {
+            return item.response.data.url
+          } else {
+            return item.url
+          }
+        })
       },
       channel_id,
     }
-    await createArticleAPI(formatData)
-    message.success('發布成功')
+
+    if (articleID) {
+      await updateArticleAPI(formatData, articleID)
+      message.success('編輯成功')
+    } else {
+      await createArticleAPI(formatData)
+      message.success('發布成功')
+    }
+
   }
   // 圖片上傳成功回調
   const onUploadChange = (info) => {
@@ -76,30 +118,7 @@ const Publish = () => {
     }
   }
 
-  // 透過id回顯數據
-  const [searchParams] = useSearchParams()
-  const articleID = searchParams.get('id')
-  const [form] = Form.useForm()
-  useEffect(() => {
-    async function getArticle() {
-      const res = await getArticleDetailAPI(articleID)
-      const data = res.data
-      const type = data.cover.type
-      console.log(res.data)
-      // 將回顯的數據設置到表單中
-      form.setFieldsValue({
-        ...data,
-        type: type
-      })
-      // 設置封面類型
-      setImageType(type)
-      // 設置上傳的圖片數組 資料格式要求：對象數組
-      setImageList(data.cover.images.map((url) => ({ url })))
-    }
-    if (articleID) {
-      getArticle()
-    }
-  }, [articleID, form])
+
 
   return (
     <div className="publish">
@@ -107,7 +126,7 @@ const Publish = () => {
         title={
           <Breadcrumb items={[
             { title: <Link to={'/'}>首页</Link> },
-            { title: '发布文章' },
+            { title: articleID ? '編輯文章' : '發布文章' }
           ]}
           />
         }

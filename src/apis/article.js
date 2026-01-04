@@ -17,6 +17,14 @@ export const createArticleAPI = (formData) => {
   })
 }
 
+export const updateArticleAPI = (formData, articleId) => {
+  return request({
+    url: `/mp/articles/${articleId}?draft=false`,
+    method: 'PUT',
+    data: formData
+  })
+}
+
 export const getArticleListAPI = (params) => {
   return request({
     url: '/mp/articles',
