@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/react-jike/static/css/main.b7ce55a8.css",
-    "main.js": "/react-jike/static/js/main.277f3cf8.js",
+    "main.js": "/react-jike/static/js/main.1b2ea826.js",
     "static/js/322.a9f56493.chunk.js": "/react-jike/static/js/322.a9f56493.chunk.js",
     "static/js/888.e1b0071d.chunk.js": "/react-jike/static/js/888.e1b0071d.chunk.js",
     "static/css/211.d325bd07.chunk.css": "/react-jike/static/css/211.d325bd07.chunk.css",
@@ -13,7 +13,7 @@
     "static/media/logo.png": "/react-jike/static/media/logo.536c5d801c4010c7ed6d.png",
     "index.html": "/react-jike/index.html",
     "main.b7ce55a8.css.map": "/react-jike/static/css/main.b7ce55a8.css.map",
-    "main.277f3cf8.js.map": "/react-jike/static/js/main.277f3cf8.js.map",
+    "main.1b2ea826.js.map": "/react-jike/static/js/main.1b2ea826.js.map",
     "322.a9f56493.chunk.js.map": "/react-jike/static/js/322.a9f56493.chunk.js.map",
     "888.e1b0071d.chunk.js.map": "/react-jike/static/js/888.e1b0071d.chunk.js.map",
     "211.d325bd07.chunk.css.map": "/react-jike/static/css/211.d325bd07.chunk.css.map",
@@ -24,6 +24,6 @@
   },
   "entrypoints": [
     "static/css/main.b7ce55a8.css",
-    "static/js/main.277f3cf8.js"
+    "static/js/main.1b2ea826.js"
   ]
 }
