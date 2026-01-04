@@ -4,9 +4,14 @@ import AuthRoute from '@/components/AuthRoute';
 // 導入組件
 import Layout from '@/pages/Layout';
 import Login from '@/pages/Login';
-import Home from '@/pages/Home';
-import Article from '@/pages/Article';
-import Publish from '@/pages/Publish';
+// import Home from '@/pages/Home';
+// import Article from '@/pages/Article';
+// import Publish from '@/pages/Publish';
+import { lazy, Suspense } from 'react';
+
+const Home = lazy(() => import('@/pages/Home'));
+const Article = lazy(() => import('@/pages/Article'));
+const Publish = lazy(() => import('@/pages/Publish'));
 
 // 配置路由
 const router = createBrowserRouter([
@@ -16,15 +21,27 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Home />,
+        element: (
+          <Suspense fallback={<div>loading...</div>}>
+            <Home />
+          </Suspense>
+        ),
       },
       {
         path: '/article',
-        element: <Article />,
+        element: (
+          <Suspense fallback={<div>loading...</div>}>
+            <Article />
+          </Suspense>
+        ),
       },
       {
         path: '/publish',
-        element: <Publish />,
+        element: (
+          <Suspense fallback={<div>loading...</div>}>
+            <Publish />
+          </Suspense>
+        ),
       },
     ]
   },

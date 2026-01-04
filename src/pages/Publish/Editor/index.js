@@ -37,7 +37,7 @@ const MyEditor = ({ value, onChange }) => {
     if (value && quillRef.current.root.innerHTML !== value) {
       quillRef.current.root.innerHTML = value;
     }
-  }, [value]);
+  }, [value, onChange]);
 
   return (
     <div style={{ padding: '20px' }}>
